@@ -1,18 +1,38 @@
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+const cameraSelect = document.getElementById('cameraSelect');
 
-async function startVideo() {
+// Enumerate cameras and populate the dropdown
+navigator.mediaDevices.enumerateDevices()
+  .then(devices => {
+    devices.forEach(device => {
+      if (device.kind === 'videoinput') {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.text = device.label || `Camera ${cameraSelect.length + 1}`;
+        cameraSelect.appendChild(option);
+      }
+    });
+  })
+  .catch(error => {
+    console.error('Error enumerating devices:', error);
+  });
+
+async function startSelectedCamera() {
+  const selectedCameraId = cameraSelect.value;
+
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const stream = await navigator.mediaDevices.getUserMedia({ 
+      video: { deviceId: selectedCameraId }
+    });
     video.srcObject = stream;
 
-    // When the video is playing, we draw its frames on the canvas
     video.onplaying = () => {
       renderToCanvas();
     };
   } catch (err) {
-    console.error('Error accessing the webcam:', err);
+    console.error('Error accessing the selected camera:', err);
   }
 }
 

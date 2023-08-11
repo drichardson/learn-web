@@ -6,9 +6,12 @@
 		<title>Canvas Video Input</title>
 	</head>
 	<body>
+		<h1>Input</h1>
+		<select id="cameraSelect"></select>
+		<button onclick="startSelectedCamera()">Start Selected Camera</button>
+		<h1>Output</h1>
 		<video id="video" width="640" height="480" autoplay muted></video>
 		<canvas id="canvas" width="640" height="480"></canvas>
-		<button onclick="startVideo()">Start Video</button>
 		<script src="main.js"></script>
 	</body>
 </html>
